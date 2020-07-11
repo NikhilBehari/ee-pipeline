@@ -1,2 +1,3 @@
-# ee-pipeline
-Data pipeline to download Google Earth Engine files
+## ee-pipeline
+
+This repo contains Python Notebook files to create a Google Earth Engine data pipeline.
