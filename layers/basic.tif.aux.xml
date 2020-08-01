@@ -61,13 +61,6 @@
   </PAMRasterBand>
   <PAMRasterBand band="4">
     <Description>Psurf_f_tavg</Description>
-    <Metadata>
-      <MDI key="STATISTICS_MAXIMUM">102755.90625</MDI>
-      <MDI key="STATISTICS_MEAN">94720.320139929</MDI>
-      <MDI key="STATISTICS_MINIMUM">51740.9296875</MDI>
-      <MDI key="STATISTICS_STDDEV">7827.1632303358</MDI>
-      <MDI key="STATISTICS_VALID_PERCENT">27.04</MDI>
-    </Metadata>
   </PAMRasterBand>
   <PAMRasterBand band="5">
     <Description>Qair_f_tavg</Description>
