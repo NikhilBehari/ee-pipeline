@@ -1,3 +1,3 @@
 ## ee-pipeline
 
-This repo contains Python Notebook files to create a Google Earth Engine data pipeline.
+Google Earth Engine pipeline and other raster manipulation methods
