@@ -21,6 +21,8 @@ calculatePCA <- function(tif_file){
 
 calculateMC <- function(f1, bands=NULL){
   raster_stack = stack(tif_file, bands=bands)
+  
+  ## Pairwise correlation
   # raster_stack <- addLayer(raster_stack, other_raster_stack)
   # jnk = layerStats(raster_stack, 'pearson', na.rm=T)
   # corr_matrix = jnk$'pearson correlation coefficient'
