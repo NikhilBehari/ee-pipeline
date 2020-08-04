@@ -43,8 +43,8 @@ calculateMC <- function(f1, bands=NULL){
 
 calculateVIF <- function(f1){
   raster_stack = stack(f1, bands=NULL)
-  # narrowed = calculateMC(FILE)
-  # raster_stack = subset(raster_stack, narrowed)
+  narrowed = calculateMC(FILE)
+  raster_stack = subset(raster_stack, narrowed)
   return (vif(raster_stack))
 }
 
