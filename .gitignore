@@ -12,6 +12,9 @@
 .ipynb_checkpoints/
 .RData
 .Rhistory
+output/
+input/
+temp/
 
 # IntelliJ related
 *.iml
