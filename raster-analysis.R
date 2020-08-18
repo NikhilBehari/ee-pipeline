@@ -7,6 +7,7 @@ library(usdm)
 library(ENMTools)
 library(corrplot)
 library(RColorBrewer)
+library(infotheo)
 
 # CONSTANTS
 FILE = "../raster-images/basic.tif"
@@ -28,12 +29,6 @@ calculatePCA <- function(tif_file){
 calculateMC <- function(f1, bands=NULL){
   raster_stack = stack(f1, bands=bands)
   
-  ## Pairwise correlation
-  # raster_stack <- addLayer(raster_stack, other_raster_stack)
-  # jnk = layerStats(raster_stack, 'pearson', na.rm=T)
-  # corr_matrix = jnk$'pearson correlation coefficient'
-  # corr_matrix
-  
   return (removeCollinearity(
     raster.stack = raster_stack,
     multicollinearity.cutoff = 0.7,
@@ -44,54 +39,41 @@ calculateMC <- function(f1, bands=NULL){
   ))
 }
 
-calculateVIF <- function(f1){
-  raster_stack = stack(f1, bands=NULL)
-  # raster_stack = subset(raster_stack)
-  return (vif(raster_stack))
+calculateVIF <- function(stack){
+  return (vif(stack))
 }
 
-calculateCOR <- function(f1){
-  raster_stack = stack(f1, bands=NULL)
+calculateCOR <- function(stack, visualize=FALSE){
+  cor_out = cor(sampleRandom(stack, size=5000, method="pearson"))
   
-  return(layerStats(raster_stack, stat='pearson'))
+  if(visualize){
+    corrplot(samp_out, tl.col = "black", tl.srt = 90, method="color",sig.level = c(.001, .01, .05), pch.cex = .9, type="lower", col=brewer.pal(n=8, name="BuPu"))
+    
+    col <- colorRampPalette(c("#BB4444", "#EE9988", "#FFFFFF", "#77AADD", "#4477AA"))
+    corrplot(samp_out, method = "color", col = col(200),
+             type = "lower", order = "hclust", number.cex = .7,
+             # addCoef.col = "black", # Add coefficient of correlation
+             tl.col = "black", tl.srt = 90, tl.cex=0.3, # Text label color and rotation
+             # Combine with significance 
+             # insig = "blank", 
+             # hide correlation coefficient on the principal diagonal
+             diag = FALSE)
+  }
+  
+  return(cor_out)
 }
 
-full_stack = stack("../raster-images/basic.tif")
+calculateMI <- function(stack, visualize=FALSE){
+  matrix_stack = as.data.frame(stack)
+  matrix_stack = discretize(matrix_stack)
+  mi_grid = mutinformation(matrix_stack)
+  
+  if(visualize){
+    corrplot(mi_grid, is.corr=FALSE)
+  }
+  
+  return(mi_grid)
+}
 
-vif(full_stack)
-
-samp_out = cor(sampleRandom(full_stack, size=50000, method="pearson"))
-
-corrplot(samp_out, tl.col = "black", tl.srt = 90, method="color",sig.level = c(.001, .01, .05), pch.cex = .9, type="lower", col=brewer.pal(n=8, name="BuPu"))
-
-
-col <- colorRampPalette(c("#BB4444", "#EE9988", "#FFFFFF", "#77AADD", "#4477AA"))
-corrplot(samp_out, method = "color", col = col(200),
-         type = "lower", order = "hclust", number.cex = .7,
-         # addCoef.col = "black", # Add coefficient of correlation
-         tl.col = "black", tl.srt = 90, tl.cex=0.3, # Text label color and rotation
-         # Combine with significance 
-         # insig = "blank", 
-         # hide correlation coefficient on the principal diagonal
-         diag = FALSE)
-
-samp_out
-write.csv(samp_out, file="test.csv")
-
-# calculateVIF("../raster-images/")
-# 
-# cor_frame = calculateCOR("../raster-images/multilayer.tif")
-# cor_frame
-# 
-# 
-# raster_stack = stack("../raster-images/multilayer.tif", bands=NULL)
-# samp_out = cor(sampleRandom(raster_stack, size=50000, method="pearson"))
-# corrplot(samp_out, type="upper")
-# 
-# 
-# samp_out 
-# test_out_samp <- samp_out
-# colnames(test_out_samp) <- c("Chickens", "Cows", "Ducks", "Goats", "Horses", "Pigs", "Sheep")
-# rownames(test_out_samp) <- c("Chickens", "Cows", "Ducks", "Goats", "Horses", "Pigs", "Sheep")
-# 
-# corrplot(test_out_samp, tl.col = "black", tl.srt = 90, method="color",sig.level = c(.001, .01, .05), pch.cex = .9, type="upper", col=brewer.pal(n=8, name="BuPu"))
+full_stack = stack("input/basic.tif")
+grid = calculateMI(full_stack, visualize=TRUE)
