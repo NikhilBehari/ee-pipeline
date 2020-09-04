@@ -15,6 +15,7 @@
 output/
 input/
 temp/
+regions/
 
 # IntelliJ related
 *.iml
